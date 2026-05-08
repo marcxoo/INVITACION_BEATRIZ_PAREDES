@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Baby Mini Mouse / Invitation Palette */
+  --baby-pink: #FFD1DC;
+  --hot-pink: #FF69B4;
+  --plum: #7A2D3E;
+  --gold: #D4AF37;
+  --paper: #FDFBF7;
+  --white: #ffffff;
+
+  --background: var(--paper);
+  --foreground: var(--plum);
+
+  /* Fonts */
+  --font-vibes: 'Great Vibes', cursive;
+  --font-playfair: 'Playfair Display', serif;
+  --font-cinzel: 'Cinzel', serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--plum);
+}

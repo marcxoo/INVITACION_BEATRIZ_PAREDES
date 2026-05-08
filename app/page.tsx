@@ -17,16 +17,10 @@ import RsvpModal from './components/RsvpModal';
 export default function Home() {
   const [isRsvpOpen, setRsvpOpen] = useState(false);
   const [invitationLoaded, setInvitationLoaded] = useState(false);
-  const [eventSlug, setEventSlug] = useState('invitacion-rosita-maria'); // Default
+  const [eventSlug, setEventSlug] = useState('invitacion-beatriz-paredes'); // Default
 
   useEffect(() => {
-    // Check domain for "arelys"
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname.includes('arelys')) {
-        setEventSlug('invitacion-arelys');
-      }
-    }
+    // Logic for specific domains if needed
   }, []);
 
   // MANEJADOR DEL TIMER: Ajusta estos valores para moverlo

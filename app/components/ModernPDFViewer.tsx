@@ -143,19 +143,19 @@ export default function ModernPDFViewer({ file, onOpenRsvp, onOpenMap, onLoad, t
                                 {/* STATIC HEART WITH COMPACT ROTATING TEXT EMBLEM */}
                                 <div className="relative mb-14 mt-4 flex items-center justify-center w-40 h-40">
 
-                                    {/* Rotating Text: Rosita María - Mathematically Perfect Distribution */}
+                                    {/* Rotating Text: Beatriz Paredes - Mathematically Perfect Distribution */}
                                     <motion.div
                                         animate={{ rotate: 360 }}
                                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                                         className="absolute inset-0 m-auto z-10 text-plum font-cinzel font-semibold opacity-[0.85]"
                                         style={{ width: '116px', height: '116px', fontSize: '11.5px' }}
                                     >
-                                        {"ROSITA MARÍA • ROSITA MARÍA • ROSITA MARÍA • ".split("").map((char, i) => (
+                                        {"BEATRIZ PAREDES • BEATRIZ PAREDES • BEATRIZ PAREDES • ".split("").map((char, i) => (
                                             <div
                                                 key={i}
                                                 className="absolute top-0 left-1/2 h-full flex justify-center origin-center"
                                                 style={{
-                                                    transform: `translateX(-50%) rotate(${i * 8}deg)`,
+                                                    transform: `translateX(-50%) rotate(${i * 6.55}deg)`,
                                                     width: '16px'
                                                 }}
                                             >

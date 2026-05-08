@@ -43,9 +43,9 @@ export default function AdminLanding() {
             <h1 className="text-4xl text-[#7A2D3E] font-bold font-vibes">Selecciona el Panel de Admin</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-                <Link href="/admin/rosita-maria"
+                <Link href="/admin/beatriz-paredes"
                     className="block p-8 bg-white border-2 border-[#D4AF37] rounded-2xl text-center hover:scale-105 transition-transform shadow-lg cursor-pointer">
-                    <h2 className="text-2xl font-bold text-[#7A2D3E] mb-2">Rosita María</h2>
+                    <h2 className="text-2xl font-bold text-[#7A2D3E] mb-2">Beatriz Paredes</h2>
                     <span className="text-gray-400 text-sm">Ver Asistencia</span>
                 </Link>
 

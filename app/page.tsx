@@ -54,7 +54,7 @@ export default function Home() {
   // MANEJADOR DEL TIMER: Ajusta estos valores para moverlo
   const timerConfig = {
     page: 1,
-    top: 'calc(64.5% - 210px)',
+    top: 'calc(69% - 215px)',
     left: '50%',
   };
 

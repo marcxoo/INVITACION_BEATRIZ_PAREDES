@@ -68,32 +68,27 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
 
     // ── PANEL PRINCIPAL ──
     return (
-        <div className="min-h-screen relative overflow-x-hidden"
-            style={{ background: 'radial-gradient(ellipse at 50% 0%, #2e1f06 0%, #16100a 55%, #0d0a06 100%)' }}>
+        <div className="min-h-screen relative overflow-x-hidden font-playfair bg-[#FCFBF8]"
+            style={{ backgroundImage: 'radial-gradient(rgba(107,31,49,0.05) 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
 
             {/* Ambient glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
-                style={{ background: 'radial-gradient(ellipse, rgba(197,160,89,0.14) 0%, transparent 70%)' }} />
+                style={{ background: 'radial-gradient(ellipse, rgba(107,31,49,0.04) 0%, transparent 70%)' }} />
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
 
                 {/* CABECERA */}
                 <div className="text-center space-y-3">
                     <div className="flex items-center gap-2">
-                        <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(197,160,89,0.7))' }} />
-                        <svg width="7" height="7" viewBox="0 0 7 7" fill="rgba(197,160,89,1)"><polygon points="3.5,0 7,3.5 3.5,7 0,3.5" /></svg>
-                        <svg width="4" height="4" viewBox="0 0 4 4" fill="rgba(197,160,89,0.7)" className="mx-1"><polygon points="2,0 4,2 2,4 0,2" /></svg>
-                        <svg width="7" height="7" viewBox="0 0 7 7" fill="rgba(197,160,89,1)"><polygon points="3.5,0 7,3.5 3.5,7 0,3.5" /></svg>
-                        <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(197,160,89,0.7))' }} />
+                        <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.5))' }} />
+                        <svg width="6" height="6" viewBox="0 0 6 6" fill="rgba(107,31,49,0.6)" className="rotate-45"><rect width="6" height="6" /></svg>
+                        <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.5))' }} />
                     </div>
-                    <h1 className="font-vibes" style={{
+                    <h1 className="font-vibes text-[#6B1F31]" style={{
                         fontSize: 'clamp(3rem, 8vw, 5.5rem)',
-                        background: 'linear-gradient(180deg, #fff0b3 0%, #e8c060 50%, #c5a059 100%)',
-                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                         lineHeight: 1.1,
-                        filter: 'drop-shadow(0 2px 12px rgba(197,160,89,0.35))',
                     }}>Beatriz Paredes</h1>
-                    <p className="font-cinzel text-[9px] tracking-[0.45em] uppercase" style={{ color: 'rgba(197,160,89,0.75)' }}>
+                    <p className="font-cinzel text-[9px] tracking-[0.45em] uppercase" style={{ color: 'rgba(107,31,49,0.7)' }}>
                         Reporte de Asistencia
                     </p>
                 </div>
@@ -105,22 +100,22 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
                         { label: 'Total Personas',        value: stats.people,    main: true  },
                         { label: 'Declinaron',            value: stats.declined,  main: false },
                     ].map(({ label, value, main }) => (
-                        <div key={label} className="text-center py-6 sm:py-8 px-2 sm:px-4"
+                        <div key={label} className="text-center py-6 sm:py-8 px-2 sm:px-4 transition-transform hover:-translate-y-1"
                             style={{
-                                background: main ? 'linear-gradient(160deg, #3a2a0a 0%, #261a06 100%)' : 'rgba(197,160,89,0.06)',
-                                border: `1px solid ${main ? 'rgba(197,160,89,0.8)' : 'rgba(197,160,89,0.3)'}`,
-                                borderRadius: '2px',
-                                boxShadow: main ? '0 8px 40px rgba(197,160,89,0.2), inset 0 1px 0 rgba(255,240,160,0.1)' : 'inset 0 1px 0 rgba(197,160,89,0.05)',
+                                background: main ? '#6B1F31' : 'rgba(255,255,255,0.7)',
+                                border: `1px solid ${main ? '#6B1F31' : 'rgba(107,31,49,0.2)'}`,
+                                borderRadius: '4px',
+                                boxShadow: main ? '0 12px 30px rgba(107,31,49,0.25)' : '0 4px 15px rgba(0,0,0,0.03)',
+                                backdropFilter: 'blur(10px)',
                             }}>
                             <p className="font-cinzel mb-3 leading-tight uppercase"
-                                style={{ fontSize: 'clamp(7px, 1.8vw, 10px)', letterSpacing: '0.3em', color: main ? 'rgba(197,160,89,0.9)' : 'rgba(197,160,89,0.6)' }}>
+                                style={{ fontSize: 'clamp(7px, 1.8vw, 10px)', letterSpacing: '0.3em', color: main ? 'rgba(252,251,248,0.9)' : 'rgba(107,31,49,0.6)' }}>
                                 {label}
                             </p>
                             <div className="font-cinzel" style={{
                                 fontSize: 'clamp(2rem, 6vw, 4rem)',
-                                color: main ? '#ffe599' : '#C5A059',
+                                color: main ? '#FCFBF8' : '#6B1F31',
                                 lineHeight: 1,
-                                textShadow: main ? '0 0 30px rgba(197,160,89,0.5)' : 'none',
                             }}>
                                 {value}
                             </div>
@@ -129,26 +124,26 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
                 </div>
 
                 {/* TABLA */}
-                <div style={{ border: '1px solid rgba(197,160,89,0.4)', borderRadius: '2px', overflow: 'hidden', boxShadow: '0 4px 32px rgba(0,0,0,0.4)' }}>
+                <div style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(107,31,49,0.2)', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', backdropFilter: 'blur(10px)' }}>
                     {/* Header */}
                     <div className="flex items-center justify-between px-5 sm:px-6 py-4"
-                        style={{ background: 'linear-gradient(90deg, rgba(197,160,89,0.18) 0%, rgba(197,160,89,0.06) 100%)', borderBottom: '1px solid rgba(197,160,89,0.35)' }}>
-                        <h2 className="font-cinzel text-[10px] sm:text-[11px] tracking-[0.3em] uppercase" style={{ color: '#E8C96A' }}>
+                        style={{ background: 'rgba(107,31,49,0.03)', borderBottom: '1px solid rgba(107,31,49,0.15)' }}>
+                        <h2 className="font-cinzel text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-bold" style={{ color: '#6B1F31' }}>
                             Lista de Invitados
                         </h2>
                         <button onClick={fetchGuests}
-                            className="font-cinzel text-[9px] tracking-[0.2em] uppercase px-4 py-2 transition-all active:scale-95"
-                            style={{ border: '1px solid rgba(197,160,89,0.6)', color: '#C5A059', borderRadius: '2px' }}>
+                            className="font-cinzel text-[9px] tracking-[0.2em] uppercase px-4 py-2 transition-all active:scale-95 bg-[#6B1F31] text-[#FCFBF8] rounded hover:bg-[#5a1928]"
+                            style={{ boxShadow: '0 2px 8px rgba(107,31,49,0.2)' }}>
                             ↻ Actualizar
                         </button>
                     </div>
 
                     {/* Columnas */}
                     <div className="grid px-5 sm:px-6 py-3"
-                        style={{ gridTemplateColumns: '1fr 70px 110px', borderBottom: '1px solid rgba(197,160,89,0.2)', background: 'rgba(197,160,89,0.07)' }}>
+                        style={{ gridTemplateColumns: '1fr 70px 110px', borderBottom: '1px solid rgba(107,31,49,0.1)' }}>
                         {['Nombre / Familia', 'Personas', 'Estado'].map((h, i) => (
-                            <span key={h} className="font-cinzel text-[8px] tracking-[0.3em] uppercase"
-                                style={{ color: 'rgba(197,160,89,0.7)', textAlign: i === 1 ? 'center' : i === 2 ? 'right' : 'left' as any }}>
+                            <span key={h} className="font-cinzel text-[8px] tracking-[0.3em] uppercase font-bold"
+                                style={{ color: 'rgba(107,31,49,0.6)', textAlign: i === 1 ? 'center' : i === 2 ? 'right' : 'left' as any }}>
                                 {h}
                             </span>
                         ))}
@@ -158,13 +153,13 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
                     {loading ? (
                         <div className="py-16 flex justify-center gap-3">
                             {[0, 1, 2].map(i => (
-                                <div key={i} className="w-2 h-2 rounded-full"
-                                    style={{ background: '#C5A059', animation: `gatsby-dot 1.4s ease-in-out ${i * 0.32}s infinite` }} />
+                                <div key={i} className="w-2 h-2 rounded-full bg-[#6B1F31] animate-pulse"
+                                    style={{ animationDelay: `${i * 150}ms` }} />
                             ))}
                         </div>
                     ) : guests.length === 0 ? (
                         <div className="py-16 text-center">
-                            <p className="font-playfair italic text-sm" style={{ color: 'rgba(197,160,89,0.25)' }}>
+                            <p className="font-playfair italic text-sm" style={{ color: 'rgba(107,31,49,0.4)' }}>
                                 No hay respuestas aún...
                             </p>
                         </div>
@@ -173,28 +168,27 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
                             {guests.map((g, i) => {
                                 const isYes = g.status === 'confirmed';
                                 return (
-                                    <div key={g.id || i} className="grid px-5 sm:px-6 py-4 items-center"
+                                    <div key={g.id || i} className="grid px-5 sm:px-6 py-4 items-center hover:bg-[#6B1F31]/[0.02] transition-colors"
                                         style={{
                                             gridTemplateColumns: '1fr 70px 110px',
-                                            background: i % 2 === 1 ? 'rgba(197,160,89,0.05)' : 'rgba(197,160,89,0.02)',
-                                            borderBottom: '1px solid rgba(197,160,89,0.12)',
+                                            borderBottom: '1px solid rgba(107,31,49,0.08)',
                                             opacity: isYes ? 1 : 0.6,
                                         }}>
                                         <div>
-                                            <div className="font-playfair text-sm sm:text-base" style={{ color: '#F5E6B8' }}>{g.family_name}</div>
-                                            <div className="font-mono text-[8px] mt-0.5" style={{ color: 'rgba(197,160,89,0.4)' }}>{g.id?.slice(0, 8)}</div>
+                                            <div className="font-playfair text-sm sm:text-base font-semibold" style={{ color: '#6B1F31' }}>{g.family_name}</div>
+                                            <div className="font-mono text-[8px] mt-0.5" style={{ color: 'rgba(107,31,49,0.4)' }}>{g.id?.slice(0, 8)}</div>
                                         </div>
-                                        <div className="text-center font-cinzel"
-                                            style={{ fontSize: '1.1rem', color: isYes ? '#E8C96A' : 'rgba(197,160,89,0.35)' }}>
+                                        <div className="text-center font-cinzel font-bold"
+                                            style={{ fontSize: '1.1rem', color: isYes ? '#6B1F31' : 'rgba(107,31,49,0.4)' }}>
                                             {isYes ? (g.confirmed_count || 1) : '—'}
                                         </div>
                                         <div className="text-right">
-                                            <span className="font-cinzel text-[7px] sm:text-[8px] tracking-[0.15em] uppercase px-2.5 py-1"
+                                            <span className="font-cinzel text-[7px] sm:text-[8px] tracking-[0.15em] uppercase px-3 py-1.5 font-bold"
                                                 style={{
-                                                    background: isYes ? 'rgba(197,160,89,0.18)' : 'rgba(255,255,255,0.04)',
-                                                    border: `1px solid ${isYes ? 'rgba(197,160,89,0.55)' : 'rgba(255,255,255,0.12)'}`,
-                                                    color: isYes ? '#E8C96A' : 'rgba(255,255,255,0.4)',
-                                                    borderRadius: '2px',
+                                                    background: isYes ? 'rgba(107,31,49,0.08)' : 'transparent',
+                                                    border: `1px solid ${isYes ? 'transparent' : 'rgba(107,31,49,0.2)'}`,
+                                                    color: isYes ? '#6B1F31' : 'rgba(107,31,49,0.5)',
+                                                    borderRadius: '4px',
                                                     whiteSpace: 'nowrap',
                                                 }}>
                                                 {isYes ? 'Asistirá' : 'No podrá'}
@@ -209,12 +203,12 @@ export default function AdminDashboard({ params }: { params: Promise<{ slug: str
 
                 {/* PIE */}
                 <div className="flex items-center justify-between pt-2 pb-12">
-                    <p className="font-cinzel text-[8px] tracking-[0.2em] uppercase" style={{ color: 'rgba(197,160,89,0.5)' }}>
+                    <p className="font-cinzel text-[8px] tracking-[0.2em] uppercase font-bold" style={{ color: 'rgba(107,31,49,0.5)' }}>
                         {guests.length} registro{guests.length !== 1 ? 's' : ''} únicos
                     </p>
                     <button onClick={handleDeleteAll}
-                        className="font-cinzel text-[9px] tracking-[0.2em] uppercase px-5 py-2.5 transition-all active:scale-95"
-                        style={{ border: '1px solid rgba(220,60,60,0.45)', color: 'rgba(220,90,90,0.7)', borderRadius: '2px' }}>
+                        className="font-cinzel text-[9px] tracking-[0.2em] uppercase px-5 py-2.5 transition-all active:scale-95 hover:bg-red-50"
+                        style={{ border: '1px solid rgba(220,60,60,0.3)', color: 'rgba(220,60,60,0.8)', borderRadius: '4px' }}>
                         Borrar todos los registros
                     </button>
                 </div>

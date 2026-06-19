@@ -6,16 +6,14 @@ import { motion } from 'framer-motion';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-// Configure PDF worker
+// Worker local — sin dependencia de CDN externo
 if (typeof window !== 'undefined') {
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
-// Optimization options for the PDF document
+// Sin cmaps externos — el PDF usa fuentes estándar
 const documentOptions = {
-    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
     cMapPacked: true,
-    standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
 };
 
 import CountdownTimer from './CountdownTimer';
@@ -76,10 +74,7 @@ export default function ModernPDFViewer({ file, onOpenRsvp, onOpenMap, onLoad, t
     // Called when the FIRST page is fully painted on current view
     function onPageRenderSuccess() {
         if (!isLoaded) {
-            // Add a small buffer to ensure visual stability
-            setTimeout(() => {
-                setIsLoaded(true);
-            }, 500);
+            setIsLoaded(true);
         }
     }
 
@@ -94,136 +89,88 @@ export default function ModernPDFViewer({ file, onOpenRsvp, onOpenMap, onLoad, t
     return (
         <div className="w-full flex flex-col items-center bg-paper min-h-screen relative" ref={containerRef}>
 
-            {/* PREMIUM LOADER / SPLASH SCREEN */}
+            {/* GATSBY LUXURY LOADER */}
             {showLoader && (
-                <div
-                    className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-paper transition-opacity duration-1000 ease-in-out ${!showLoader ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 overflow-hidden bg-[#FCFBF8]"
+                    style={{ backgroundImage: 'radial-gradient(rgba(107,31,49,0.05) 1px, transparent 1px)', backgroundSize: '30px 30px' }}
                 >
-                    {/* BACKGROUND TEXTURE */}
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                        style={{
-                            backgroundImage: 'url("https://www.transparenttextures.com/patterns/cream-paper.png")',
-                        }}
-                    />
-                    <div className="absolute inset-0 opacity-10 pointer-events-none"
-                        style={{
-                            backgroundImage: 'radial-gradient(#7A2D3E 1px, transparent 1px)',
-                            backgroundSize: '30px 30px'
-                        }}
-                    />
+                    {/* Ambient glow */}
+                    <div className="absolute w-[500px] h-[500px] rounded-full pointer-events-none"
+                        style={{ background: 'radial-gradient(circle, rgba(107,31,49,0.04) 0%, transparent 70%)' }} />
 
-                    {/* DECORATIVE CORNERS (GOLD) */}
-                    <div className="absolute top-10 left-10 w-32 h-32 border-t-2 border-l-2 border-gold/40 rounded-tl-3xl pointer-events-none hidden sm:block" />
-                    <div className="absolute top-10 right-10 w-32 h-32 border-t-2 border-r-2 border-gold/40 rounded-tr-3xl pointer-events-none hidden sm:block" />
-                    <div className="absolute bottom-10 left-10 w-32 h-32 border-b-2 border-l-2 border-gold/40 rounded-bl-3xl pointer-events-none hidden sm:block" />
-                    <div className="absolute bottom-10 right-10 w-32 h-32 border-b-2 border-r-2 border-gold/40 rounded-br-3xl pointer-events-none hidden sm:block" />
+                    <div className="relative z-10 flex flex-col items-center text-center px-8 w-full max-w-sm">
 
-                    <div className="relative z-10 flex flex-col items-center w-full max-w-md px-10">
+                        {/* Top ornament */}
+                        <div className="flex items-center gap-3 w-full mb-8">
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.5))' }} />
+                            <svg width="6" height="6" viewBox="0 0 6 6" fill="rgba(107,31,49,0.5)" className="rotate-45"><rect width="6" height="6" /></svg>
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.5))' }} />
+                        </div>
+
+                        {/* Pre-title */}
+                        <p className="font-cinzel text-[10px] tracking-[0.3em] mb-4 uppercase"
+                            style={{ color: 'rgba(107,31,49,0.6)' }}>
+                            Una Invitación Exclusiva
+                        </p>
+
+                        {/* Name */}
+                        <h1 className="font-cinzel text-5xl md:text-6xl tracking-[0.1em] leading-tight mb-6 text-[#6B1F31]">
+                            BEATRIZ<br />PAREDES
+                        </h1>
+
+                        {/* Middle ornament */}
+                        <div className="flex items-center gap-3 w-full mb-6">
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.3))' }} />
+                            <svg width="4" height="4" viewBox="0 0 4 4" fill="rgba(107,31,49,0.3)" className="rotate-45"><rect width="4" height="4" /></svg>
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.3))' }} />
+                        </div>
+
+                        <p className="font-playfair italic text-xl tracking-wider mb-1 text-[#6B1F31]/80">
+                            Mis dulces 60 años
+                        </p>
+                        <p className="font-cinzel text-[10px] tracking-[0.35em] mb-10 text-[#6B1F31]/50">
+                            2026
+                        </p>
+
+                        {/* Loading state */}
                         {!isLoaded ? (
-                            <div className="flex flex-col items-center w-full max-w-xs px-6">
-                                <div className="w-16 h-16 border-4 border-baby-pink border-t-plum rounded-full animate-spin mb-6"></div>
-                                <div className="text-3xl sm:text-4xl font-bold font-vibes text-plum animate-pulse whitespace-nowrap">Cargando Invitación...</div>
-
-                                {/* PROGRESS BAR */}
-                                <div className="w-full h-2 bg-gray-200 rounded-full mt-6 overflow-hidden border border-plum/10">
-                                    <div
-                                        className="h-full bg-plum transition-all duration-300 ease-out"
-                                        style={{ width: `${loadingProgress}%` }}
-                                    />
+                            <div className="flex flex-col items-center gap-5 h-[48px] justify-center">
+                                <div className="flex gap-3">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#6B1F31] animate-pulse" />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#6B1F31] animate-pulse" style={{ animationDelay: '150ms' }} />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#6B1F31] animate-pulse" style={{ animationDelay: '300ms' }} />
                                 </div>
-                                <p className="mt-2 text-sm font-playfair text-plum opacity-80">{loadingProgress}% completado</p>
+                                {loadingProgress > 0 && (
+                                    <div className="w-40 h-px overflow-hidden bg-[#6B1F31]/10">
+                                        <div className="h-full transition-all duration-300 bg-[#6B1F31]" style={{ width: `${loadingProgress}%` }} />
+                                    </div>
+                                )}
                             </div>
                         ) : (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 1.2, ease: "easeOut" }}
-                                className="flex flex-col items-center w-full"
+                            <motion.button
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                onClick={() => {
+                                    setShowLoader(false);
+                                    if (onLoad) onLoad(true);
+                                }}
+                                className="group relative px-10 py-3 overflow-hidden rounded-full border border-[#6B1F31]/30 hover:border-[#6B1F31]/60 transition-colors"
+                                style={{ background: 'rgba(107,31,49,0.03)' }}
                             >
-                                {/* STATIC HEART WITH COMPACT ROTATING TEXT EMBLEM */}
-                                <div className="relative mb-14 mt-4 flex items-center justify-center w-40 h-40">
-
-                                    {/* Rotating Text: Beatriz Paredes - Mathematically Perfect Distribution */}
-                                    <motion.div
-                                        animate={{ rotate: 360 }}
-                                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                        className="absolute inset-0 m-auto z-10 text-plum font-cinzel font-semibold opacity-[0.85]"
-                                        style={{ width: '116px', height: '116px', fontSize: '11.5px' }}
-                                    >
-                                        {"BEATRIZ PAREDES • BEATRIZ PAREDES • BEATRIZ PAREDES • ".split("").map((char, i) => (
-                                            <div
-                                                key={i}
-                                                className="absolute top-0 left-1/2 h-full flex justify-center origin-center"
-                                                style={{
-                                                    transform: `translateX(-50%) rotate(${i * 6.55}deg)`,
-                                                    width: '16px'
-                                                }}
-                                            >
-                                                {/* Push text slightly down from edge for perfect vertical centering */}
-                                                <span className="mt-[-2px]">{char}</span>
-                                            </div>
-                                        ))}
-                                    </motion.div>
-
-                                    {/* Static Heart Core */}
-                                    <div className="relative z-20 text-plum drop-shadow-[0_4px_12px_rgba(122,45,62,0.25)]">
-                                        <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                {/* ELEGANT FRAMED TEXT */}
-                                <div className="relative mb-16 py-8 px-6 w-full max-w-sm">
-                                    {/* Subtle crop-mark like corners */}
-                                    <div className="absolute top-0 left-0 w-4 h-[1px] bg-gold/50" />
-                                    <div className="absolute top-0 left-0 w-[1px] h-4 bg-gold/50" />
-                                    <div className="absolute top-0 right-0 w-4 h-[1px] bg-gold/50" />
-                                    <div className="absolute top-0 right-0 w-[1px] h-4 bg-gold/50" />
-                                    <div className="absolute bottom-0 left-0 w-4 h-[1px] bg-gold/50" />
-                                    <div className="absolute bottom-0 left-0 w-[1px] h-4 bg-gold/50" />
-                                    <div className="absolute bottom-0 right-0 w-4 h-[1px] bg-gold/50" />
-                                    <div className="absolute bottom-0 right-0 w-[1px] h-4 bg-gold/50" />
-
-                                    {/* Left and Right very faint framing lines */}
-                                    <div className="absolute top-4 bottom-4 left-0 w-[1px] bg-gold/20" />
-                                    <div className="absolute top-4 bottom-4 right-0 w-[1px] bg-gold/20" />
-
-                                    <h3 className="font-cinzel text-plum text-center leading-relaxed flex flex-col items-center gap-3">
-                                        <span className="text-sm tracking-[0.15em] opacity-90">
-                                            TU PRESENCIA ES PARTE DE LA SORPRESA.
-                                        </span>
-                                        <span className="text-xs tracking-[0.1em] opacity-60">
-                                            TE PEDIMOS MANTENERLO EN SECRETO HASTA EL GRAN DÍA
-                                        </span>
-                                    </h3>
-                                </div>
-
-                                {/* MINIMALIST LUXURY BUTTON */}
-                                <div className="relative">
-                                    {/* Floating Dots */}
-                                    <div className="absolute -top-6 -right-8 w-2 h-2 rounded-full bg-plum/80" />
-                                    <div className="absolute top-0 -right-4 w-1.5 h-1.5 rounded-full bg-plum/40" />
-                                    <div className="absolute -bottom-4 -left-6 w-2 h-2 rounded-full bg-plum/80" />
-                                    <div className="absolute bottom-2 -left-3 w-1.5 h-1.5 rounded-full bg-plum/40" />
-
-                                    <button
-                                        onClick={() => {
-                                            setShowLoader(false);
-                                            if (onLoad) onLoad(true);
-                                        }}
-                                        className="group relative px-16 py-5 bg-plum text-white rounded-[40px] shadow-[0_10px_25px_rgba(122,45,62,0.25)] transition-all duration-300 transform hover:scale-[1.02] active:scale-95 overflow-hidden"
-                                    >
-                                        <span className="relative z-10 font-vibes text-[2.5rem] tracking-wide block leading-none pt-2 pb-1">
-                                            Abrir Invitación
-                                        </span>
-
-                                        {/* Extremely subtle hover shimmer */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                                    </button>
-                                </div>
-                            </motion.div>
+                                <span className="relative z-10 font-cinzel text-sm tracking-[0.2em] uppercase font-bold text-[#6B1F31]">
+                                    Abrir Invitación
+                                </span>
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[#6B1F31]/5" />
+                            </motion.button>
                         )}
+
+                        {/* Bottom ornament */}
+                        <div className="flex items-center gap-3 w-full mt-8">
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.5))' }} />
+                            <svg width="6" height="6" viewBox="0 0 6 6" fill="rgba(107,31,49,0.5)" className="rotate-45"><rect width="6" height="6" /></svg>
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.5))' }} />
+                        </div>
                     </div>
                 </div>
             )}

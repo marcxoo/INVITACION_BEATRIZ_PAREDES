@@ -60,7 +60,7 @@ export default function AudioPlayer() {
                 preload="auto"
             />
 
-            {/* Constraints container - invisible and non-blocking */}
+            {/* Constraints container */}
             <div ref={constraintsRef} className="fixed inset-0 pointer-events-none z-[190]" />
 
             <motion.div
@@ -71,65 +71,79 @@ export default function AudioPlayer() {
                 className="fixed top-6 right-6 z-[200] cursor-grab active:cursor-grabbing touch-none"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{
-                    opacity: isScrolling ? 0.3 : 1,
-                    scale: isScrolling ? 0.85 : 1
+                    opacity: isScrolling ? 0.2 : 1,
+                    scale: isScrolling ? 0.8 : 1
                 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3, opacity: { duration: 0.5 } }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ duration: 0.4, opacity: { duration: 0.6 } }}
             >
                 <button
                     onClick={togglePlay}
-                    className={`
-                    relative w-14 h-14 rounded-full border-2 border-white/20
-                    flex items-center justify-center overflow-hidden
-                    shadow-[0_4px_14px_rgba(122,45,62,0.4)]
-                    transition-all duration-300
-                    ${isPlaying ? 'bg-plum' : 'bg-gray-400'}
-                `}
+                    className="relative w-16 h-16 flex items-center justify-center"
+                    aria-label={isPlaying ? 'Pausar música' : 'Reproducir música'}
                 >
-                    {/* PATTERN BACKGROUND */}
-                    <div
-                        className="absolute inset-0 opacity-20"
-                        style={{
-                            backgroundImage: 'radial-gradient(#D4AF37 1px, transparent 1px)',
-                            backgroundSize: '8px 8px'
-                        }}
-                    />
+                    {/* Outer gold ring */}
+                    <span className={`
+                        absolute inset-0 rounded-full
+                        border-2 transition-all duration-700
+                        ${isPlaying ? 'border-[#C5A059]' : 'border-[#C5A059]/40'}
+                    `} />
 
-                    {/* ICON - Color Gold */}
-                    <div className="relative z-10 text-gold">
-                        {isPlaying ? (
-                            <svg className="animate-pulse" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                            </svg>
-                        ) : (
-                            <div className="relative">
-                                {/* Mute Icon */}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M9 9v6a3 3 0 0 0 5.12 2.12M15 9.34V4h-6a2.13 2.13 0 1 1-2 2v2" />
+                    {/* Pulse rings (visible only when playing) */}
+                    {isPlaying && <>
+                        <span className="absolute inset-0 rounded-full border border-[#C5A059]/40 animate-[gatsby-ring_2s_ease-out_infinite]" />
+                        <span className="absolute inset-0 rounded-full border border-[#C5A059]/20 animate-[gatsby-ring_2s_ease-out_0.7s_infinite]" />
+                    </>}
+
+                    {/* Main circle background */}
+                    <span className={`
+                        relative z-10 w-12 h-12 rounded-full flex items-center justify-center
+                        transition-all duration-500
+                        ${isPlaying
+                            ? 'bg-[#0A0A0A] shadow-[0_0_20px_rgba(197,160,89,0.35)]'
+                            : 'bg-[#111111] shadow-[0_4px_12px_rgba(0,0,0,0.5)]'
+                        }
+                    `}>
+                        {/* Art-deco diamond pattern */}
+                        <span className="absolute inset-0 rounded-full overflow-hidden opacity-15"
+                            style={{
+                                backgroundImage: 'repeating-linear-gradient(45deg, #C5A059 0px, #C5A059 1px, transparent 0, transparent 50%)',
+                                backgroundSize: '8px 8px'
+                            }}
+                        />
+
+                        {/* Music note / mute icon */}
+                        <span className={`relative z-10 transition-all duration-300 ${isPlaying ? 'text-[#E8D39E]' : 'text-[#C5A059]/50'}`}>
+                            {isPlaying ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-0.5 bg-white/50 rotate-45 rounded-full"></div>
-                            </div>
-                        )}
-                    </div>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                    <path d="M9 9v6a3 3 0 0 0 5.12 2.12M15 9.34V4h-6a2.13 2.13 0 0 0-.5.06"/>
+                                </svg>
+                            )}
+                        </span>
+                    </span>
 
-                    {/* PULSING EFFECT */}
-                    {isPlaying && (
-                        <div className="absolute inset-0 animate-magical-pulse pointer-events-none">
-                            <div className="w-full h-full rounded-full border border-gold opacity-30" />
-                        </div>
-                    )}
+                    {/* Gold label beneath */}
+                    <span className={`
+                        absolute -bottom-5 left-1/2 -translate-x-1/2
+                        text-[9px] tracking-[0.2em] font-cinzel whitespace-nowrap
+                        transition-all duration-500
+                        ${isPlaying ? 'text-[#C5A059]' : 'text-[#C5A059]/40'}
+                    `}>
+                        {isPlaying ? 'LIVE' : 'MUTED'}
+                    </span>
                 </button>
 
                 <style jsx>{`
-            @keyframes magical-pulse {
-                0% { transform: scale(1); opacity: 0.5; }
-                100% { transform: scale(1.5); opacity: 0; }
-            }
-            .animate-magical-pulse {
-                animation: magical-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-            }
-        `}</style>
+                    @keyframes gatsby-ring {
+                        0% { transform: scale(1); opacity: 0.6; }
+                        100% { transform: scale(1.8); opacity: 0; }
+                    }
+                `}</style>
             </motion.div>
         </>
     );

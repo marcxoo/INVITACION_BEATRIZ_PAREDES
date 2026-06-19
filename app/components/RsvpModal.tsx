@@ -57,7 +57,7 @@ export default function RsvpModal({ isOpen, onClose, prefilledName, eventSlug }:
 
         try {
             const { data, error } = await supabase
-                .from('invitations')
+            .from('beatriz_rsvp')
                 .select('*')
                 .eq('id', storedId)
                 .single();
@@ -112,15 +112,11 @@ export default function RsvpModal({ isOpen, onClose, prefilledName, eventSlug }:
                 confirmed_count: attending ? count : 0,
                 status: attending ? 'confirmed' : 'declined',
                 is_public: true,
-                event_slug: eventSlug
             };
 
             if (invitationId) {
-                // UPDATE Workaround: 
-                // Since RLS policies often block UPDATE but allow INSERT/DELETE for anon users,
-                // we delete the old record and create a new one to simulate an update.
                 const { error: deleteError } = await supabase
-                    .from('invitations')
+                    .from('beatriz_rsvp')
                     .delete()
                     .eq('id', invitationId);
 
@@ -131,7 +127,7 @@ export default function RsvpModal({ isOpen, onClose, prefilledName, eventSlug }:
 
             // Always Insert New Record
             const { data, error: insertError } = await supabase
-                .from('invitations')
+                .from('beatriz_rsvp')
                 .insert([invitationData])
                 .select();
 
@@ -171,33 +167,60 @@ export default function RsvpModal({ isOpen, onClose, prefilledName, eventSlug }:
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
                 >
                     <motion.div
-                        initial={{ scale: 0.9, y: 20 }}
-                        animate={{ scale: 1, y: 0 }}
-                        exit={{ scale: 0.9, y: 20 }}
-                        className="bg-paper border-2 border-gold rounded-[30px] w-full max-w-md p-8 relative shadow-2xl overflow-hidden font-playfair"
+                        initial={{ scale: 0.95, y: 24, opacity: 0 }}
+                        animate={{ scale: 1, y: 0, opacity: 1 }}
+                        exit={{ scale: 0.95, y: 24, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                        className="relative w-full max-w-md overflow-hidden font-playfair"
+                        style={{
+                            background: '#FCFBF8',
+                            backgroundImage: 'radial-gradient(rgba(107,31,49,0.03) 1px, transparent 1px)',
+                            backgroundSize: '20px 20px',
+                            border: '1px solid rgba(107,31,49,0.15)',
+                            borderRadius: '4px',
+                            boxShadow: '0 24px 64px rgba(0,0,0,0.15)',
+                        }}
                     >
-                        {/* POLKA DOT OVERLAY REMOVED */}
+                        {/* Ambient glow */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 pointer-events-none"
+                            style={{ background: 'radial-gradient(ellipse, rgba(107,31,49,0.05) 0%, transparent 70%)' }} />
+
+                        {/* Top ornament */}
+                        <div className="flex items-center gap-2 px-8 pt-6 mb-1">
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.4))' }} />
+                            <svg width="4" height="4" viewBox="0 0 4 4" fill="rgba(107,31,49,0.6)" className="rotate-45"><rect width="4" height="4" /></svg>
+                            <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.4))' }} />
+                        </div>
 
                         {/* CLOSE BUTTON */}
                         <button
                             onClick={onClose}
-                            className="absolute top-5 right-5 text-plum hover:scale-110 transition-transform z-20"
+                            className="absolute top-4 right-4 z-20 transition-opacity opacity-50 hover:opacity-100"
+                            style={{ color: '#6B1F31' }}
                         >
-                            <X size={28} strokeWidth={3} />
+                            <X size={22} strokeWidth={1.5} />
                         </button>
 
                         {step === 'form' ? (
-                            <div className="space-y-6 relative z-10">
+                            <div className="px-8 pb-8 pt-2 space-y-6 relative z-10">
+                                {/* Header */}
                                 <div className="text-center">
-                                    <h2 className="text-plum text-5xl font-bold mb-2 font-vibes">¡Celebremos a Rosita!</h2>
-                                    <p className="text-plum opacity-90 text-lg">Acompáñanos a festejar este día especial.</p>
+                                    <p className="font-cinzel text-[9px] tracking-[0.4em] mb-3 uppercase" style={{ color: 'rgba(107,31,49,0.6)' }}>
+                                        Confirmación de Asistencia
+                                    </p>
+                                    <h2 className="font-vibes mb-1 text-[#6B1F31]" style={{ fontSize: '2.8rem', lineHeight: 1.1 }}>
+                                        ¡Celebremos a Beatriz!
+                                    </h2>
+                                    <p className="font-playfair italic text-sm" style={{ color: 'rgba(107,31,49,0.7)' }}>
+                                        Acompáñanos a festejar este día especial.
+                                    </p>
                                 </div>
 
                                 <div className="space-y-5">
                                     {/* NAME INPUT */}
                                     <div className="space-y-2">
-                                        <label className="flex items-center gap-2 text-plum font-semibold text-lg">
-                                            <User size={20} className="text-gold" />
+                                        <label className="flex items-center gap-2 font-cinzel text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(107,31,49,0.8)' }}>
+                                            <User size={13} />
                                             Nombre o Familia
                                         </label>
                                         <input
@@ -205,113 +228,132 @@ export default function RsvpModal({ isOpen, onClose, prefilledName, eventSlug }:
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             placeholder="Ej. Familia Pérez"
-                                            className="w-full p-4 border-2 border-baby-pink rounded-2xl focus:border-plum outline-none bg-white text-plum text-lg font-medium transition-all"
+                                            className="w-full px-4 py-3 outline-none text-base font-playfair transition-all placeholder-[#6B1F31]/30"
+                                            style={{
+                                                background: 'rgba(107,31,49,0.02)',
+                                                border: '1px solid rgba(107,31,49,0.2)',
+                                                borderRadius: '2px',
+                                                color: '#6B1F31',
+                                            }}
                                         />
                                     </div>
 
                                     {/* COUNT INPUT */}
                                     <div className="space-y-2">
-                                        <label className="flex items-center gap-2 text-plum font-semibold text-lg">
-                                            <Users size={20} className="text-gold" />
+                                        <label className="flex items-center gap-2 font-cinzel text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(107,31,49,0.8)' }}>
+                                            <Users size={13} />
                                             ¿Cuántos vendrán?
                                         </label>
-                                        <div className="flex items-center gap-6 bg-white p-2 rounded-2xl w-fit border-2 border-baby-pink">
+                                        <div className="flex items-center gap-5">
                                             <button
                                                 onClick={() => setCount(Math.max(1, count - 1))}
-                                                className="w-12 h-12 rounded-xl bg-paper text-plum shadow-sm hover:shadow-md active:scale-95 transition-all text-2xl font-bold flex items-center justify-center border border-baby-pink"
-                                            >
-                                                -
-                                            </button>
-                                            <span className="text-3xl font-bold text-plum min-w-[30px] text-center font-vibes">{count}</span>
+                                                className="w-10 h-10 flex items-center justify-center text-xl transition-all active:scale-90"
+                                                style={{ border: '1px solid rgba(107,31,49,0.2)', color: '#6B1F31', borderRadius: '2px' }}
+                                            >−</button>
+                                            <span className="font-cinzel text-2xl min-w-[28px] text-center" style={{ color: '#6B1F31' }}>{count}</span>
                                             <button
-                                                onClick={() => setCount(Math.max(1, count + 1))}
-                                                className="w-12 h-12 rounded-xl bg-plum text-white shadow-sm hover:shadow-md active:scale-95 transition-all text-2xl font-bold flex items-center justify-center"
-                                            >
-                                                +
-                                            </button>
+                                                onClick={() => setCount(count + 1)}
+                                                className="w-10 h-10 flex items-center justify-center text-xl transition-all active:scale-90"
+                                                style={{ background: 'rgba(107,31,49,0.05)', border: '1px solid rgba(107,31,49,0.3)', color: '#6B1F31', borderRadius: '2px' }}
+                                            >+</button>
                                         </div>
                                     </div>
                                 </div>
 
-                                {error && <p className="text-red-500 font-medium text-center bg-red-50 p-2 rounded-lg">{error}</p>}
+                                {error && <p className="text-red-500 text-sm text-center font-cinzel tracking-wider">{error}</p>}
 
-                                <div className="grid grid-cols-2 gap-4 pt-4">
+                                {/* Bottom ornament */}
+                                <div className="flex items-center gap-2">
+                                    <div className="flex-1 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(107,31,49,0.3))' }} />
+                                    <svg width="4" height="4" viewBox="0 0 4 4" fill="rgba(107,31,49,0.5)" className="rotate-45"><rect width="4" height="4" /></svg>
+                                    <div className="flex-1 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(107,31,49,0.3))' }} />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
                                     <button
                                         onClick={() => handleSubmit(false)}
                                         disabled={loading}
-                                        className="py-4 px-4 bg-white text-plum border-2 border-plum/20 rounded-2xl hover:bg-gray-50 font-bold transition-all disabled:opacity-50 text-base"
+                                        className="py-3 px-4 font-cinzel text-[11px] tracking-[0.2em] uppercase transition-all disabled:opacity-40 active:scale-95"
+                                        style={{ border: '1px solid rgba(107,31,49,0.3)', color: 'rgba(107,31,49,0.8)', borderRadius: '2px' }}
                                     >
                                         No podré ir
                                     </button>
                                     <button
                                         onClick={() => handleSubmit(true)}
                                         disabled={loading}
-                                        className="py-4 px-4 bg-plum text-white rounded-2xl shadow-lg active:shadow-none active:translate-y-[2px] font-bold transition-all disabled:opacity-50 text-base"
+                                        className="py-3 px-4 font-cinzel text-[11px] tracking-[0.2em] uppercase transition-all disabled:opacity-40 active:scale-95"
+                                        style={{
+                                            background: '#6B1F31',
+                                            color: '#FCFBF8',
+                                            borderRadius: '2px',
+                                            boxShadow: '0 4px 16px rgba(107,31,49,0.2)',
+                                        }}
                                     >
                                         {loading ? 'Enviando...' : (invitationId ? 'Actualizar' : '¡Sí, asistiré!')}
                                     </button>
                                 </div>
                             </div>
                         ) : step === 'alreadyResponded' ? (
-                            <div className="text-center py-6 space-y-6 relative z-10">
+                            <div className="px-8 pb-8 pt-2 text-center space-y-5 relative z-10">
                                 <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="w-24 h-24 bg-white text-gold rounded-full flex items-center justify-center mx-auto shadow-xl border-4 border-gold/20"
+                                    initial={{ scale: 0, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 200 }}
+                                    className="w-16 h-16 mx-auto flex items-center justify-center"
+                                    style={{ border: '1px solid rgba(107,31,49,0.3)', borderRadius: '2px', background: 'rgba(107,31,49,0.02)' }}
                                 >
-                                    <Check size={50} strokeWidth={3} />
+                                    <Check size={28} style={{ color: '#6B1F31' }} strokeWidth={1.5} />
                                 </motion.div>
-                                <div className="space-y-2">
-                                    <h2 className="text-plum text-4xl font-bold font-vibes">¡Ya respondiste!</h2>
-                                    <p className="text-plum text-lg font-medium">
-                                        Hemos guardado tu respuesta como <br />
-                                        <span className="font-bold text-plum">"{name}"</span>
+                                <div>
+                                    <h2 className="font-vibes mb-1 text-[#6B1F31]" style={{ fontSize: '2.4rem' }}>
+                                        ¡Ya respondiste!
+                                    </h2>
+                                    <p className="font-playfair text-sm italic" style={{ color: 'rgba(107,31,49,0.7)' }}>
+                                        Respuesta guardada como <span style={{ color: '#6B1F31', fontWeight: 600 }}>"{name}"</span>
                                     </p>
                                 </div>
                                 <div className="space-y-3">
-                                    <button
-                                        onClick={onClose}
-                                        className="w-full py-3 px-6 bg-plum text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all shadow-lg"
-                                    >
-                                        Entendido, Cerrar
+                                    <button onClick={onClose}
+                                        className="w-full py-3 font-cinzel text-[11px] tracking-[0.2em] uppercase transition-all active:scale-95"
+                                        style={{ background: '#6B1F31', color: '#FCFBF8', borderRadius: '2px' }}>
+                                        Cerrar
                                     </button>
-
                                     <div className="flex gap-2">
-                                        <button
-                                            onClick={() => setStep('form')}
-                                            className="flex-1 py-3 px-2 bg-transparent text-plum border-2 border-plum/30 rounded-2xl font-bold hover:bg-plum/5 transition-all text-sm"
-                                        >
-                                            Corregir mi respuesta
+                                        <button onClick={() => setStep('form')}
+                                            className="flex-1 py-2.5 font-cinzel text-[9px] tracking-[0.15em] uppercase transition-all active:scale-95"
+                                            style={{ border: '1px solid rgba(107,31,49,0.2)', color: 'rgba(107,31,49,0.7)', borderRadius: '2px' }}>
+                                            Corregir
                                         </button>
-                                        <button
-                                            onClick={handleNewRegistration}
-                                            className="flex-1 py-3 px-2 bg-transparent text-plum border-2 border-plum/30 rounded-2xl font-bold hover:bg-plum/5 transition-all text-sm"
-                                        >
-                                            Registrar a otra persona
+                                        <button onClick={handleNewRegistration}
+                                            className="flex-1 py-2.5 font-cinzel text-[9px] tracking-[0.15em] uppercase transition-all active:scale-95"
+                                            style={{ border: '1px solid rgba(107,31,49,0.2)', color: 'rgba(107,31,49,0.7)', borderRadius: '2px' }}>
+                                            Otra persona
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-center py-6 space-y-6 relative z-10">
+                            <div className="px-8 pb-8 pt-2 text-center space-y-5 relative z-10">
                                 <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="w-24 h-24 bg-white text-gold rounded-full flex items-center justify-center mx-auto shadow-xl border-4 border-gold/20"
+                                    initial={{ scale: 0, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: 'spring', stiffness: 200 }}
+                                    className="w-16 h-16 mx-auto flex items-center justify-center"
+                                    style={{ border: '1px solid rgba(107,31,49,0.3)', borderRadius: '2px', background: 'rgba(107,31,49,0.02)' }}
                                 >
-                                    <Check size={50} strokeWidth={3} />
+                                    <Check size={28} style={{ color: '#6B1F31' }} strokeWidth={1.5} />
                                 </motion.div>
-                                <div className="space-y-2">
-                                    <h2 className="text-plum text-5xl font-bold font-vibes">¡Genial!</h2>
-                                    <p className="text-plum text-xl font-medium">
-                                        ¡Gracias por confirmar!<br />
-                                        Te esperamos para celebrar juntos.
+                                <div>
+                                    <h2 className="font-vibes mb-1 text-[#6B1F31]" style={{ fontSize: '2.8rem' }}>
+                                        ¡Genial!
+                                    </h2>
+                                    <p className="font-playfair italic text-sm" style={{ color: 'rgba(107,31,49,0.7)' }}>
+                                        ¡Gracias por confirmar!<br />Te esperamos para celebrar juntos.
                                     </p>
                                 </div>
-                                <button
-                                    onClick={onClose}
-                                    className="py-3 px-10 bg-plum text-white rounded-2xl font-bold hover:scale-105 active:scale-95 transition-all shadow-lg"
-                                >
+                                <button onClick={onClose}
+                                    className="py-3 px-10 font-cinzel text-[11px] tracking-[0.2em] uppercase transition-all active:scale-95"
+                                    style={{ background: '#6B1F31', color: '#FCFBF8', borderRadius: '2px' }}>
                                     Cerrar
                                 </button>
                             </div>

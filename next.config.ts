@@ -12,11 +12,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*).pdf",
+        // PDF y worker: cache 1 año
+        source: "/:path*(\.pdf|\.mjs|\.mp3)",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=3600, must-revalidate",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
